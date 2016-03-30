@@ -8,15 +8,15 @@ Add google_sign_in as a dependency in your pubspec.yaml.
 
 Ensure that ```google_sign_in``` is listed in the ```services``` section of
 your flutter.yaml:
-
+```yaml
     services:
       - google_sign_in
-
+```
 Go to the [Google Sign-In SDK instructions](https://developers.google.com/identity/sign-in/ios/sdk/)
 and follow the instructions to get a configuration file.
 
 Add the following to your ios/Info.plist:
-
+```
     <key>CFBundleURLTypes</key>
     <array>
       <dict>
@@ -50,3 +50,4 @@ Add the following to your ios/Info.plist:
         <string>com.google.gppconsent.2.2.0</string>
         <string>com.google.gppconsent</string>
     </array>
+```
