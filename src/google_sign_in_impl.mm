@@ -79,8 +79,6 @@ static const int kProfileImageURLDimension = 256;
 }
 @end
 
-namespace sky {
-namespace services {
 namespace google {
 
 GoogleSignInImpl::GoogleSignInImpl(mojo::InterfaceRequest<::google::GoogleSignIn> request)
@@ -120,12 +118,13 @@ void GoogleSignInImpl::Disconnect() {
   [[GIDSignIn sharedInstance] disconnect];
 }
 
-void GoogleSignInFactory::Create(
-    mojo::ApplicationConnection* connection,
-    mojo::InterfaceRequest<::google::GoogleSignIn> request) {
-  new GoogleSignInImpl(request.Pass());
-}
-
 }  // namespace google
-}  // namespace services
-}  // namespace sky
+
+void FlutterServicePerform(mojo::ScopedMessagePipeHandle client_handle,
+                           const mojo::String& service_name) {
+  if (service_name == google::GoogleSignIn::Name_) {
+    new google::GoogleSignInImpl(
+        mojo::MakeRequest<google::GoogleSignIn>(client_handle.Pass()));
+    return;
+  }
+}

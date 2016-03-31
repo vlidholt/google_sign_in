@@ -16,8 +16,6 @@
 class GoogleSignIn;
 #endif  // __OBJC__
 
-namespace sky {
-namespace services {
 namespace google {
 
 class GoogleSignInImpl : public ::google::GoogleSignIn {
@@ -37,15 +35,6 @@ class GoogleSignInImpl : public ::google::GoogleSignIn {
   DISALLOW_COPY_AND_ASSIGN(GoogleSignInImpl);
 };
 
-class GoogleSignInFactory
-    : public mojo::InterfaceFactory<::google::GoogleSignIn> {
- public:
-  void Create(mojo::ApplicationConnection* connection,
-              mojo::InterfaceRequest<::google::GoogleSignIn> request) override;
-};
-
 }  // namespace google
-}  // namespace services
-}  // namespace sky
 
 #endif  // THIRDPARTY_GOOGLESIGNIN_SRC_GOOGLESIGNINIMPL_H_
