@@ -1,9 +1,9 @@
 services:
   - name: google::GoogleSignIn
     android-class: org.domokit.google.GoogleSignInImpl
-    ios-framework: "ios/libGoogleSignIn.dylib"
+    ios-framework: "generated/libGoogleSignIn.dylib"
 jars:
-  # TODO: Host the JARs
+  # TODO: Figure out a path to the JARs
   # - http://localhost:8001/interfaces_java.dex.jar
   # - http://localhost:8001/google_lib.dex.jar
   # - http://localhost:8001/android-support-v4.jar

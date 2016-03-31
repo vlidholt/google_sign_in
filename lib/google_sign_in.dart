@@ -7,9 +7,10 @@ library google_sign_in;
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:sky_services/google/google_sign_in.mojom.dart' as mojom;
 
-export 'package:sky_services/google/google_sign_in.mojom.dart'
+import 'generated/google_sign_in.mojom.dart' as mojom;
+
+export 'generated/google_sign_in.mojom.dart'
   show GoogleSignInUser, GoogleSignInResult;
 
 class _Listener implements mojom.GoogleSignInListener {
