@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "base/logging.h"
-#include "base/strings/sys_string_conversions.h"
 #include "google_sign_in_impl.h"
 
 #import <GoogleSignIn.h>
@@ -14,14 +12,14 @@ static const int kProfileImageURLDimension = 256;
 
 ::google::GoogleSignInUserPtr toMojoUser(GIDGoogleUser *user) {
   ::google::GoogleSignInUserPtr mojoUser(::google::GoogleSignInUser::New());
-  mojoUser->displayName = base::SysNSStringToUTF8(user.profile.name);
-  mojoUser->email = base::SysNSStringToUTF8(user.profile.email);
-  if (user.profile.hasImage)
-    mojoUser->photoUrl = base::SysNSStringToUTF8(
-      [[user.profile imageURLWithDimension:kProfileImageURLDimension] absoluteString]
-    );
-  mojoUser->id = base::SysNSStringToUTF8(user.userID);
-  mojoUser->idToken = base::SysNSStringToUTF8(user.authentication.idToken);
+  mojoUser->displayName = user.profile.name.UTF8String;
+  mojoUser->email = user.profile.email.UTF8String;
+  if (user.profile.hasImage) {
+    NSURL *url = [user.profile imageURLWithDimension:kProfileImageURLDimension];
+    mojoUser->photoUrl = [url absoluteString].UTF8String;
+  }
+  mojoUser->id = user.userID.UTF8String;
+  mojoUser->idToken = user.authentication.idToken.UTF8String;
   return mojoUser;
 }
 
