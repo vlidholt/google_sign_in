@@ -700,6 +700,93 @@ class _GoogleSignInDisconnectParams extends bindings.Struct {
   }
 }
 
+
+class _GoogleSignInSetScopesParams extends bindings.Struct {
+  static const List<bindings.StructDataHeader> kVersions = const [
+    const bindings.StructDataHeader(16, 0)
+  ];
+  List<String> scopes = null;
+
+  _GoogleSignInSetScopesParams() : super(kVersions.last.size);
+
+  static _GoogleSignInSetScopesParams deserialize(bindings.Message message) {
+    var decoder = new bindings.Decoder(message);
+    var result = decode(decoder);
+    if (decoder.excessHandles != null) {
+      decoder.excessHandles.forEach((h) => h.close());
+    }
+    return result;
+  }
+
+  static _GoogleSignInSetScopesParams decode(bindings.Decoder decoder0) {
+    if (decoder0 == null) {
+      return null;
+    }
+    _GoogleSignInSetScopesParams result = new _GoogleSignInSetScopesParams();
+
+    var mainDataHeader = decoder0.decodeStructDataHeader();
+    if (mainDataHeader.version <= kVersions.last.version) {
+      // Scan in reverse order to optimize for more recent versions.
+      for (int i = kVersions.length - 1; i >= 0; --i) {
+        if (mainDataHeader.version >= kVersions[i].version) {
+          if (mainDataHeader.size == kVersions[i].size) {
+            // Found a match.
+            break;
+          }
+          throw new bindings.MojoCodecError(
+              'Header size doesn\'t correspond to known version size.');
+        }
+      }
+    } else if (mainDataHeader.size < kVersions.last.size) {
+      throw new bindings.MojoCodecError(
+        'Message newer than the last known version cannot be shorter than '
+        'required by the last known version.');
+    }
+    if (mainDataHeader.version >= 0) {
+      
+      var decoder1 = decoder0.decodePointer(8, false);
+      {
+        var si1 = decoder1.decodeDataHeaderForPointerArray(bindings.kUnspecifiedArrayLength);
+        result.scopes = new List<String>(si1.numElements);
+        for (int i1 = 0; i1 < si1.numElements; ++i1) {
+          
+          result.scopes[i1] = decoder1.decodeString(bindings.ArrayDataHeader.kHeaderSize + bindings.kPointerSize * i1, false);
+        }
+      }
+    }
+    return result;
+  }
+
+  void encode(bindings.Encoder encoder) {
+    var encoder0 = encoder.getStructEncoderAtOffset(kVersions.last);
+    try {
+      if (scopes == null) {
+        encoder0.encodeNullPointer(8, false);
+      } else {
+        var encoder1 = encoder0.encodePointerArray(scopes.length, 8, bindings.kUnspecifiedArrayLength);
+        for (int i0 = 0; i0 < scopes.length; ++i0) {
+          encoder1.encodeString(scopes[i0], bindings.ArrayDataHeader.kHeaderSize + bindings.kPointerSize * i0, false);
+        }
+      }
+    } on bindings.MojoCodecError catch(e) {
+      e.message = "Error encountered while encoding field "
+          "scopes of struct _GoogleSignInSetScopesParams: $e";
+      rethrow;
+    }
+  }
+
+  String toString() {
+    return "_GoogleSignInSetScopesParams("
+           "scopes: $scopes" ")";
+  }
+
+  Map toJson() {
+    Map map = new Map();
+    map["scopes"] = scopes;
+    return map;
+  }
+}
+
 const int _googleSignInListenerMethodOnSignInName = 0;
 const int _googleSignInListenerMethodOnDisconnectedName = 1;
 
@@ -911,6 +998,7 @@ const int _googleSignInMethodSignInSilentlyName = 1;
 const int _googleSignInMethodSignInName = 2;
 const int _googleSignInMethodSignOutName = 3;
 const int _googleSignInMethodDisconnectName = 4;
+const int _googleSignInMethodSetScopesName = 5;
 
 class _GoogleSignInServiceDescription implements service_describer.ServiceDescription {
   dynamic getTopLevelInterface([Function responseFactory]) =>
@@ -930,6 +1018,7 @@ abstract class GoogleSignIn {
   void signIn();
   void signOut();
   void disconnect();
+  void setScopes(List<String> scopes);
 }
 
 
@@ -1012,6 +1101,15 @@ class _GoogleSignInProxyCalls implements GoogleSignIn {
       }
       var params = new _GoogleSignInDisconnectParams();
       _proxyImpl.sendMessage(params, _googleSignInMethodDisconnectName);
+    }
+    void setScopes(List<String> scopes) {
+      if (!_proxyImpl.isBound) {
+        _proxyImpl.proxyError("The Proxy is closed.");
+        return;
+      }
+      var params = new _GoogleSignInSetScopesParams();
+      params.scopes = scopes;
+      _proxyImpl.sendMessage(params, _googleSignInMethodSetScopesName);
     }
 }
 
@@ -1119,6 +1217,11 @@ class GoogleSignInStub extends bindings.Stub {
         break;
       case _googleSignInMethodDisconnectName:
         _impl.disconnect();
+        break;
+      case _googleSignInMethodSetScopesName:
+        var params = _GoogleSignInSetScopesParams.deserialize(
+            message.payload);
+        _impl.setScopes(params.scopes);
         break;
       default:
         throw new bindings.MojoCodecError("Unexpected message name");
