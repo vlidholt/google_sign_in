@@ -12,12 +12,13 @@ import 'package:mojo/mojo/bindings/types/service_describer.mojom.dart' as servic
 
 class GoogleSignInUser extends bindings.Struct {
   static const List<bindings.StructDataHeader> kVersions = const [
-    const bindings.StructDataHeader(48, 0)
+    const bindings.StructDataHeader(56, 0)
   ];
   String displayName = null;
   String email = null;
   String id = null;
   String idToken = null;
+  String accessToken = null;
   String photoUrl = null;
 
   GoogleSignInUser() : super(kVersions.last.size);
@@ -73,7 +74,11 @@ class GoogleSignInUser extends bindings.Struct {
     }
     if (mainDataHeader.version >= 0) {
       
-      result.photoUrl = decoder0.decodeString(40, false);
+      result.accessToken = decoder0.decodeString(40, false);
+    }
+    if (mainDataHeader.version >= 0) {
+      
+      result.photoUrl = decoder0.decodeString(48, false);
     }
     return result;
   }
@@ -109,7 +114,14 @@ class GoogleSignInUser extends bindings.Struct {
       rethrow;
     }
     try {
-      encoder0.encodeString(photoUrl, 40, false);
+      encoder0.encodeString(accessToken, 40, false);
+    } on bindings.MojoCodecError catch(e) {
+      e.message = "Error encountered while encoding field "
+          "accessToken of struct GoogleSignInUser: $e";
+      rethrow;
+    }
+    try {
+      encoder0.encodeString(photoUrl, 48, false);
     } on bindings.MojoCodecError catch(e) {
       e.message = "Error encountered while encoding field "
           "photoUrl of struct GoogleSignInUser: $e";
@@ -123,6 +135,7 @@ class GoogleSignInUser extends bindings.Struct {
            "email: $email" ", "
            "id: $id" ", "
            "idToken: $idToken" ", "
+           "accessToken: $accessToken" ", "
            "photoUrl: $photoUrl" ")";
   }
 
@@ -132,6 +145,7 @@ class GoogleSignInUser extends bindings.Struct {
     map["email"] = email;
     map["id"] = id;
     map["idToken"] = idToken;
+    map["accessToken"] = accessToken;
     map["photoUrl"] = photoUrl;
     return map;
   }
