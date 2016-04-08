@@ -10,6 +10,7 @@ struct GoogleSignInUser {
   string email;
   string id;
   string idToken;
+  string accessToken;
   string photoUrl;
 };
 
