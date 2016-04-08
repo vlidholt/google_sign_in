@@ -17,7 +17,9 @@ class _Listener implements mojom.GoogleSignInListener {
   StreamController<mojom.GoogleSignInUser> _streamController;
   _Listener(this._streamController);
 
-  void onCancelled() => _streamController.close();
+  void onCancelled() {
+    _streamController.close();
+  }
 
   void onSignIn(mojom.GoogleSignInResult result) {
     if (result.isSuccess)
