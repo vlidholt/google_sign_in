@@ -118,6 +118,13 @@ void GoogleSignInImpl::Disconnect() {
   [[GIDSignIn sharedInstance] disconnect];
 }
 
+void GoogleSignInImpl::SetScopes(mojo::Array<mojo::String> mojoScopes) {
+  NSMutableArray *scopes = [NSMutableArray array];
+  for (size_t i = 0; i < mojoScopes.size(); i++)
+    [scopes addObject:@(mojoScopes[i].data())];
+  [GIDSignIn sharedInstance].scopes = scopes;
+}
+
 }  // namespace google
 
 void FlutterServicePerform(mojo::ScopedMessagePipeHandle client_handle,

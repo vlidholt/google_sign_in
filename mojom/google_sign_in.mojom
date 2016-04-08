@@ -30,4 +30,5 @@ interface GoogleSignIn {
   SignIn();
   SignOut();
   Disconnect();
+  SetScopes(array<string> scopes);
 };

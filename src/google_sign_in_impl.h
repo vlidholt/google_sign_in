@@ -29,6 +29,7 @@ class GoogleSignInImpl : public ::google::GoogleSignIn {
   void SignIn() override;
   void SignOut() override;
   void Disconnect() override;
+  void SetScopes(mojo::Array<mojo::String> scopes) override;
  private:
   mojo::StrongBinding<::google::GoogleSignIn> binding_;
 
