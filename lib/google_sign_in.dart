@@ -17,15 +17,14 @@ class _Listener implements mojom.GoogleSignInListener {
   StreamController<mojom.GoogleSignInUser> _streamController;
   _Listener(this._streamController);
 
-  void onCancelled() {
-    _streamController.close();
-  }
-
+  @override
   void onSignIn(mojom.GoogleSignInResult result) {
-    if (result.isSuccess)
+    if (result.isSuccess) {
       _streamController.add(result.user);
+    }
   }
 
+  @override
   void onDisconnected(mojom.GoogleSignInResult result) {
     if (result.isSuccess)
       _streamController.add(null);
@@ -41,6 +40,7 @@ class GoogleSignIn {
     mojom.GoogleSignInListenerStub stub = new mojom.GoogleSignInListenerStub.unbound()
       ..impl = new _Listener(_streamController);
     _proxy.ptr.init(clientID, stub);
+    onCurrentUserChanged.listen((mojom.GoogleSignInUser user) => _currentUser = user);
   }
 
   mojom.GoogleSignInProxy _proxy;
@@ -60,4 +60,11 @@ class GoogleSignIn {
 
   /// Stream for changes in current user
   Stream<mojom.GoogleSignInUser> get onCurrentUserChanged => _streamController.stream;
+
+  /// Update the requested scopes
+  void setScopes(List<String> scopes) => _proxy.ptr.setScopes(scopes);
+
+  /// Read-only access to the current user
+  mojom.GoogleSignInUser _currentUser;
+  mojom.GoogleSignInUser get currentUser => _currentUser;
 }
