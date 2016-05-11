@@ -132,7 +132,7 @@ void FlutterServicePerform(mojo::ScopedMessagePipeHandle client_handle,
                            const mojo::String& service_name) {
   if (service_name == google::GoogleSignIn::Name_) {
     new google::GoogleSignInImpl(
-        mojo::MakeRequest<google::GoogleSignIn>(client_handle.Pass()));
+        mojo::InterfaceRequest<google::GoogleSignIn>(client_handle.Pass()));
     return;
   }
 }
