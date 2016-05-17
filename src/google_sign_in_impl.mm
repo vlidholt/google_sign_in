@@ -101,6 +101,11 @@ void GoogleSignInImpl::Init(const mojo::String& clientID,
     [[GoogleSignInDelegate alloc] initWithListener:ptr.Pass()];
   gid.delegate = delegate;
   gid.uiDelegate = (id)[UIApplication sharedApplication].delegate.window.rootViewController;
+
+  // On the iOS simulator, we get "Broken pipe" errors after sign-in for some
+  // unknown reason. These errors seem harmless and we can avoid crashing the
+  // app by ignoring them.
+  signal(SIGPIPE, SIG_IGN);
 }
 
 void GoogleSignInImpl::SignInSilently() {
