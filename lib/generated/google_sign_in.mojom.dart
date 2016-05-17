@@ -927,14 +927,19 @@ class GoogleSignInListenerProxy implements bindings.ProxyBase {
 
 
 class GoogleSignInListenerStub extends bindings.Stub {
-  GoogleSignInListener _impl = null;
+  GoogleSignInListener _impl;
 
   GoogleSignInListenerStub.fromEndpoint(
-      core.MojoMessagePipeEndpoint endpoint, [this._impl])
-      : super.fromEndpoint(endpoint);
+      core.MojoMessagePipeEndpoint endpoint, [GoogleSignInListener impl])
+      : super.fromEndpoint(endpoint, autoBegin: impl != null) {
+    _impl = impl;
+  }
 
-  GoogleSignInListenerStub.fromHandle(core.MojoHandle handle, [this._impl])
-      : super.fromHandle(handle);
+  GoogleSignInListenerStub.fromHandle(
+      core.MojoHandle handle, [GoogleSignInListener impl])
+      : super.fromHandle(handle, autoBegin: impl != null) {
+    _impl = impl;
+  }
 
   GoogleSignInListenerStub.unbound() : super.unbound();
 
@@ -952,7 +957,9 @@ class GoogleSignInListenerStub extends bindings.Stub {
                                                           0,
                                                           message);
     }
-    assert(_impl != null);
+    if (_impl == null) {
+      throw new core.MojoApiError("$this has no implementation set");
+    }
     switch (message.header.type) {
       case _googleSignInListenerMethodOnSignInName:
         var params = _GoogleSignInListenerOnSignInParams.deserialize(
@@ -973,8 +980,21 @@ class GoogleSignInListenerStub extends bindings.Stub {
 
   GoogleSignInListener get impl => _impl;
   set impl(GoogleSignInListener d) {
-    assert(_impl == null);
+    if (d == null) {
+      throw new core.MojoApiError("$this: Cannot set a null implementation");
+    }
+    if (isBound && (_impl == null)) {
+      beginHandlingEvents();
+    }
     _impl = d;
+  }
+
+  @override
+  void bind(core.MojoMessagePipeEndpoint endpoint) {
+    super.bind(endpoint);
+    if (!isOpen && (_impl != null)) {
+      beginHandlingEvents();
+    }
   }
 
   String toString() {
@@ -1174,14 +1194,19 @@ class GoogleSignInProxy implements bindings.ProxyBase {
 
 
 class GoogleSignInStub extends bindings.Stub {
-  GoogleSignIn _impl = null;
+  GoogleSignIn _impl;
 
   GoogleSignInStub.fromEndpoint(
-      core.MojoMessagePipeEndpoint endpoint, [this._impl])
-      : super.fromEndpoint(endpoint);
+      core.MojoMessagePipeEndpoint endpoint, [GoogleSignIn impl])
+      : super.fromEndpoint(endpoint, autoBegin: impl != null) {
+    _impl = impl;
+  }
 
-  GoogleSignInStub.fromHandle(core.MojoHandle handle, [this._impl])
-      : super.fromHandle(handle);
+  GoogleSignInStub.fromHandle(
+      core.MojoHandle handle, [GoogleSignIn impl])
+      : super.fromHandle(handle, autoBegin: impl != null) {
+    _impl = impl;
+  }
 
   GoogleSignInStub.unbound() : super.unbound();
 
@@ -1199,7 +1224,9 @@ class GoogleSignInStub extends bindings.Stub {
                                                           0,
                                                           message);
     }
-    assert(_impl != null);
+    if (_impl == null) {
+      throw new core.MojoApiError("$this has no implementation set");
+    }
     switch (message.header.type) {
       case _googleSignInMethodInitName:
         var params = _GoogleSignInInitParams.deserialize(
@@ -1232,8 +1259,21 @@ class GoogleSignInStub extends bindings.Stub {
 
   GoogleSignIn get impl => _impl;
   set impl(GoogleSignIn d) {
-    assert(_impl == null);
+    if (d == null) {
+      throw new core.MojoApiError("$this: Cannot set a null implementation");
+    }
+    if (isBound && (_impl == null)) {
+      beginHandlingEvents();
+    }
     _impl = d;
+  }
+
+  @override
+  void bind(core.MojoMessagePipeEndpoint endpoint) {
+    super.bind(endpoint);
+    if (!isOpen && (_impl != null)) {
+      beginHandlingEvents();
+    }
   }
 
   String toString() {
