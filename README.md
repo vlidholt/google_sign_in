@@ -51,3 +51,32 @@ Add the following to your ios/Info.plist:
         <string>com.google.gppconsent</string>
     </array>
 ```
+
+### Building generated files from source
+
+Files in the lib/generated folder require a Flutter engine to build.
+
+Clone this repository into your Flutter engine repository's ```third_party/google_sign_in``` directory.
+
+To build for iOS:
+```
+./sky/tools/gn --ios --simulator --enable-google-sign-in
+ninja -C out/ios_debug_sim/ third_party/google_sign_in
+./sky/tools/gn --ios --runtime-mode release --enable-google-sign-in
+ninja -C out/ios_release/ third_party/google_sign_in
+lipo out/ios_debug_sim/libGoogleSignIn.dylib out/ios_release/libGoogleSignIn.dylib -create -output third_party/google_sign_in/lib/generated/ios/libGoogleSignIn.dylib 
+cp out/ios_debug_sim/gen/third_party/google_sign_in/mojom/google_sign_in.mojom.dart third_party/google_sign_in/lib/generated
+```
+
+To build for Android:
+```
+./sky/tools/gn --android --enable-google-sign-in
+ninja -C out/android_debug/
+cp out/android_debug//gen/third_party/google_sign_in/interfaces_java.jar third_party/google_sign_in/android/mojo/libs
+cp out/android_debug//gen/mojo/public/java/bindings.jar third_party/google_sign_in/android/mojo/libs
+cp out/android_debug//gen/mojo/public/java/system.jar third_party/google_sign_in/android/mojo/libs
+cp out/android_debug/gen/third_party/google_sign_in/mojom/google_sign_in.mojom.dart third_party/google_sign_in/lib/generated
+(cd third_party/google_sign_in/android && ./gradlew build)
+cp -r third_party/google_sign_in/android/mojo/build/intermediates/ third_party/google_sign_in/lib/generated/android/ 2>&1 | grep -v 'Permission denied'
+```
+
