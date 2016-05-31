@@ -6,7 +6,6 @@
 #define THIRDPARTY_GOOGLESIGNIN_SRC_GOOGLESIGNINIMPL_H_
 
 #include "base/macros.h"
-#include "mojo/public/cpp/application/interface_factory.h"
 #include "mojo/public/cpp/bindings/strong_binding.h"
 #include "third_party/google_sign_in/mojom/google_sign_in.mojom.h"
 

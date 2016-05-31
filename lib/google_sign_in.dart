@@ -35,11 +35,13 @@ class _Listener implements mojom.GoogleSignInListener {
 class GoogleSignIn {
   GoogleSignIn(String clientID)
     : _streamController = new StreamController<mojom.GoogleSignInUser>.broadcast(),
-      _proxy = new mojom.GoogleSignInProxy.unbound() {
-    shell.connectToService("google::GoogleSignIn", _proxy);
+      _proxy = shell.connectToApplicationService(
+        "google::GoogleSignIn",
+        mojom.GoogleSignIn.connectToService
+     )  {
     mojom.GoogleSignInListenerStub stub = new mojom.GoogleSignInListenerStub.unbound()
       ..impl = new _Listener(_streamController);
-    _proxy.ptr.init(clientID, stub);
+    _proxy.init(clientID, stub);
     onCurrentUserChanged.listen((mojom.GoogleSignInUser user) => _currentUser = user);
   }
 
@@ -47,22 +49,22 @@ class GoogleSignIn {
   StreamController<mojom.GoogleSignInUser> _streamController;
 
   /// Attempts to sign in a previously authenticated user without interaction.
-  void signInSilently() => _proxy.ptr.signInSilently();
+  void signInSilently() => _proxy.signInSilently();
 
   /// Starts the sign-in process.
-  void signIn() => _proxy.ptr.signIn();
+  void signIn() => _proxy.signIn();
 
   /// Marks current user as being in the signed out state.
-  void signOut() => _proxy.ptr.signOut();
+  void signOut() => _proxy.signOut();
 
   /// Disconnects the current user from the app and revokes previous authentication.
-  void disconnect() => _proxy.ptr.disconnect();
+  void disconnect() => _proxy.disconnect();
 
   /// Stream for changes in current user
   Stream<mojom.GoogleSignInUser> get onCurrentUserChanged => _streamController.stream;
 
   /// Update the requested scopes
-  void setScopes(List<String> scopes) => _proxy.ptr.setScopes(scopes);
+  void setScopes(List<String> scopes) => _proxy.setScopes(scopes);
 
   /// Read-only access to the current user
   mojom.GoogleSignInUser _currentUser;

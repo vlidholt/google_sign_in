@@ -21,6 +21,7 @@ static const int kProfileImageURLDimension = 256;
   mojoUser->id = user.userID.UTF8String;
   mojoUser->idToken = user.authentication.idToken.UTF8String;
   mojoUser->accessToken = user.authentication.accessToken.UTF8String;
+  mojoUser->serverAuthCode = user.serverAuthCode.UTF8String;
   return mojoUser;
 }
 
