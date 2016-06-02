@@ -39,6 +39,11 @@ if (is_ios) {
     libs = [
       "UIKit.framework",
       "GoogleSignIn.framework",
+      "GoogleAppUtilities.framework",
+      "GoogleAuthUtilities.framework",
+      "GoogleNetworkingUtilities.framework",
+      "GoogleSymbolUtilities.framework",
+      "GoogleUtilities.framework",
       "AddressBook.framework",
       "SafariServices.framework",
       "StoreKit.framework",
