@@ -12,13 +12,14 @@ import 'package:mojo/mojo/bindings/types/service_describer.mojom.dart' as servic
 
 class GoogleSignInUser extends bindings.Struct {
   static const List<bindings.StructDataHeader> kVersions = const [
-    const bindings.StructDataHeader(56, 0)
+    const bindings.StructDataHeader(64, 0)
   ];
   String displayName = null;
   String email = null;
   String id = null;
   String idToken = null;
   String accessToken = null;
+  String serverAuthCode = null;
   String photoUrl = null;
 
   GoogleSignInUser() : super(kVersions.last.size);
@@ -58,27 +59,31 @@ class GoogleSignInUser extends bindings.Struct {
     }
     if (mainDataHeader.version >= 0) {
       
-      result.displayName = decoder0.decodeString(8, false);
+      result.displayName = decoder0.decodeString(8, true);
     }
     if (mainDataHeader.version >= 0) {
       
-      result.email = decoder0.decodeString(16, false);
+      result.email = decoder0.decodeString(16, true);
     }
     if (mainDataHeader.version >= 0) {
       
-      result.id = decoder0.decodeString(24, false);
+      result.id = decoder0.decodeString(24, true);
     }
     if (mainDataHeader.version >= 0) {
       
-      result.idToken = decoder0.decodeString(32, false);
+      result.idToken = decoder0.decodeString(32, true);
     }
     if (mainDataHeader.version >= 0) {
       
-      result.accessToken = decoder0.decodeString(40, false);
+      result.accessToken = decoder0.decodeString(40, true);
     }
     if (mainDataHeader.version >= 0) {
       
-      result.photoUrl = decoder0.decodeString(48, false);
+      result.serverAuthCode = decoder0.decodeString(48, true);
+    }
+    if (mainDataHeader.version >= 0) {
+      
+      result.photoUrl = decoder0.decodeString(56, true);
     }
     return result;
   }
@@ -86,42 +91,49 @@ class GoogleSignInUser extends bindings.Struct {
   void encode(bindings.Encoder encoder) {
     var encoder0 = encoder.getStructEncoderAtOffset(kVersions.last);
     try {
-      encoder0.encodeString(displayName, 8, false);
+      encoder0.encodeString(displayName, 8, true);
     } on bindings.MojoCodecError catch(e) {
       e.message = "Error encountered while encoding field "
           "displayName of struct GoogleSignInUser: $e";
       rethrow;
     }
     try {
-      encoder0.encodeString(email, 16, false);
+      encoder0.encodeString(email, 16, true);
     } on bindings.MojoCodecError catch(e) {
       e.message = "Error encountered while encoding field "
           "email of struct GoogleSignInUser: $e";
       rethrow;
     }
     try {
-      encoder0.encodeString(id, 24, false);
+      encoder0.encodeString(id, 24, true);
     } on bindings.MojoCodecError catch(e) {
       e.message = "Error encountered while encoding field "
           "id of struct GoogleSignInUser: $e";
       rethrow;
     }
     try {
-      encoder0.encodeString(idToken, 32, false);
+      encoder0.encodeString(idToken, 32, true);
     } on bindings.MojoCodecError catch(e) {
       e.message = "Error encountered while encoding field "
           "idToken of struct GoogleSignInUser: $e";
       rethrow;
     }
     try {
-      encoder0.encodeString(accessToken, 40, false);
+      encoder0.encodeString(accessToken, 40, true);
     } on bindings.MojoCodecError catch(e) {
       e.message = "Error encountered while encoding field "
           "accessToken of struct GoogleSignInUser: $e";
       rethrow;
     }
     try {
-      encoder0.encodeString(photoUrl, 48, false);
+      encoder0.encodeString(serverAuthCode, 48, true);
+    } on bindings.MojoCodecError catch(e) {
+      e.message = "Error encountered while encoding field "
+          "serverAuthCode of struct GoogleSignInUser: $e";
+      rethrow;
+    }
+    try {
+      encoder0.encodeString(photoUrl, 56, true);
     } on bindings.MojoCodecError catch(e) {
       e.message = "Error encountered while encoding field "
           "photoUrl of struct GoogleSignInUser: $e";
@@ -136,6 +148,7 @@ class GoogleSignInUser extends bindings.Struct {
            "id: $id" ", "
            "idToken: $idToken" ", "
            "accessToken: $accessToken" ", "
+           "serverAuthCode: $serverAuthCode" ", "
            "photoUrl: $photoUrl" ")";
   }
 
@@ -146,6 +159,7 @@ class GoogleSignInUser extends bindings.Struct {
     map["id"] = id;
     map["idToken"] = idToken;
     map["accessToken"] = accessToken;
+    map["serverAuthCode"] = serverAuthCode;
     map["photoUrl"] = photoUrl;
     return map;
   }
@@ -390,7 +404,7 @@ class _GoogleSignInInitParams extends bindings.Struct {
     const bindings.StructDataHeader(24, 0)
   ];
   String clientId = null;
-  Object listener = null;
+  GoogleSignInListenerInterface listener = null;
 
   _GoogleSignInInitParams() : super(kVersions.last.size);
 
@@ -803,28 +817,60 @@ class _GoogleSignInListenerServiceDescription implements service_describer.Servi
 
 abstract class GoogleSignInListener {
   static const String serviceName = null;
+
+  static service_describer.ServiceDescription _cachedServiceDescription;
+  static service_describer.ServiceDescription get serviceDescription {
+    if (_cachedServiceDescription == null) {
+      _cachedServiceDescription = new _GoogleSignInListenerServiceDescription();
+    }
+    return _cachedServiceDescription;
+  }
+
+  static GoogleSignInListenerProxy connectToService(
+      bindings.ServiceConnector s, String url, [String serviceName]) {
+    GoogleSignInListenerProxy p = new GoogleSignInListenerProxy.unbound();
+    String name = serviceName ?? GoogleSignInListener.serviceName;
+    if ((name == null) || name.isEmpty) {
+      throw new core.MojoApiError(
+          "If an interface has no ServiceName, then one must be provided.");
+    }
+    s.connectToService(url, p, name);
+    return p;
+  }
   void onSignIn(GoogleSignInResult result);
   void onDisconnected(GoogleSignInResult result);
 }
 
+abstract class GoogleSignInListenerInterface
+    implements bindings.MojoInterface<GoogleSignInListener>,
+               GoogleSignInListener {
+  factory GoogleSignInListenerInterface([GoogleSignInListener impl]) =>
+      new GoogleSignInListenerStub.unbound(impl);
+  factory GoogleSignInListenerInterface.fromEndpoint(
+      core.MojoMessagePipeEndpoint endpoint,
+      [GoogleSignInListener impl]) =>
+      new GoogleSignInListenerStub.fromEndpoint(endpoint, impl);
+}
 
-class _GoogleSignInListenerProxyImpl extends bindings.Proxy {
-  _GoogleSignInListenerProxyImpl.fromEndpoint(
+abstract class GoogleSignInListenerInterfaceRequest
+    implements bindings.MojoInterface<GoogleSignInListener>,
+               GoogleSignInListener {
+  factory GoogleSignInListenerInterfaceRequest() =>
+      new GoogleSignInListenerProxy.unbound();
+}
+
+class _GoogleSignInListenerProxyControl
+    extends bindings.ProxyMessageHandler
+    implements bindings.ProxyControl<GoogleSignInListener> {
+  _GoogleSignInListenerProxyControl.fromEndpoint(
       core.MojoMessagePipeEndpoint endpoint) : super.fromEndpoint(endpoint);
 
-  _GoogleSignInListenerProxyImpl.fromHandle(core.MojoHandle handle) :
-      super.fromHandle(handle);
+  _GoogleSignInListenerProxyControl.fromHandle(
+      core.MojoHandle handle) : super.fromHandle(handle);
 
-  _GoogleSignInListenerProxyImpl.unbound() : super.unbound();
+  _GoogleSignInListenerProxyControl.unbound() : super.unbound();
 
-  static _GoogleSignInListenerProxyImpl newFromEndpoint(
-      core.MojoMessagePipeEndpoint endpoint) {
-    assert(endpoint.setDescription("For _GoogleSignInListenerProxyImpl"));
-    return new _GoogleSignInListenerProxyImpl.fromEndpoint(endpoint);
-  }
-
-  service_describer.ServiceDescription get serviceDescription =>
-    new _GoogleSignInListenerServiceDescription();
+  String get serviceName => GoogleSignInListener.serviceName;
 
   void handleResponse(bindings.ServiceMessage message) {
     switch (message.header.type) {
@@ -835,68 +881,32 @@ class _GoogleSignInListenerProxyImpl extends bindings.Proxy {
     }
   }
 
+  GoogleSignInListener get impl => null;
+  set impl(GoogleSignInListener _) {
+    throw new core.MojoApiError("The impl of a Proxy cannot be set.");
+  }
+
+  @override
   String toString() {
     var superString = super.toString();
-    return "_GoogleSignInListenerProxyImpl($superString)";
+    return "_GoogleSignInListenerProxyControl($superString)";
   }
 }
 
-
-class _GoogleSignInListenerProxyCalls implements GoogleSignInListener {
-  _GoogleSignInListenerProxyImpl _proxyImpl;
-
-  _GoogleSignInListenerProxyCalls(this._proxyImpl);
-    void onSignIn(GoogleSignInResult result) {
-      if (!_proxyImpl.isBound) {
-        _proxyImpl.proxyError("The Proxy is closed.");
-        return;
-      }
-      var params = new _GoogleSignInListenerOnSignInParams();
-      params.result = result;
-      _proxyImpl.sendMessage(params, _googleSignInListenerMethodOnSignInName);
-    }
-    void onDisconnected(GoogleSignInResult result) {
-      if (!_proxyImpl.isBound) {
-        _proxyImpl.proxyError("The Proxy is closed.");
-        return;
-      }
-      var params = new _GoogleSignInListenerOnDisconnectedParams();
-      params.result = result;
-      _proxyImpl.sendMessage(params, _googleSignInListenerMethodOnDisconnectedName);
-    }
-}
-
-
-class GoogleSignInListenerProxy implements bindings.ProxyBase {
-  final bindings.Proxy impl;
-  GoogleSignInListener ptr;
-
-  GoogleSignInListenerProxy(_GoogleSignInListenerProxyImpl proxyImpl) :
-      impl = proxyImpl,
-      ptr = new _GoogleSignInListenerProxyCalls(proxyImpl);
-
+class GoogleSignInListenerProxy
+    extends bindings.Proxy<GoogleSignInListener>
+    implements GoogleSignInListener,
+               GoogleSignInListenerInterface,
+               GoogleSignInListenerInterfaceRequest {
   GoogleSignInListenerProxy.fromEndpoint(
-      core.MojoMessagePipeEndpoint endpoint) :
-      impl = new _GoogleSignInListenerProxyImpl.fromEndpoint(endpoint) {
-    ptr = new _GoogleSignInListenerProxyCalls(impl);
-  }
+      core.MojoMessagePipeEndpoint endpoint)
+      : super(new _GoogleSignInListenerProxyControl.fromEndpoint(endpoint));
 
-  GoogleSignInListenerProxy.fromHandle(core.MojoHandle handle) :
-      impl = new _GoogleSignInListenerProxyImpl.fromHandle(handle) {
-    ptr = new _GoogleSignInListenerProxyCalls(impl);
-  }
+  GoogleSignInListenerProxy.fromHandle(core.MojoHandle handle)
+      : super(new _GoogleSignInListenerProxyControl.fromHandle(handle));
 
-  GoogleSignInListenerProxy.unbound() :
-      impl = new _GoogleSignInListenerProxyImpl.unbound() {
-    ptr = new _GoogleSignInListenerProxyCalls(impl);
-  }
-
-  factory GoogleSignInListenerProxy.connectToService(
-      bindings.ServiceConnector s, String url, [String serviceName]) {
-    GoogleSignInListenerProxy p = new GoogleSignInListenerProxy.unbound();
-    s.connectToService(url, p, serviceName);
-    return p;
-  }
+  GoogleSignInListenerProxy.unbound()
+      : super(new _GoogleSignInListenerProxyControl.unbound());
 
   static GoogleSignInListenerProxy newFromEndpoint(
       core.MojoMessagePipeEndpoint endpoint) {
@@ -904,50 +914,49 @@ class GoogleSignInListenerProxy implements bindings.ProxyBase {
     return new GoogleSignInListenerProxy.fromEndpoint(endpoint);
   }
 
-  String get serviceName => GoogleSignInListener.serviceName;
 
-  Future close({bool immediate: false}) => impl.close(immediate: immediate);
-
-  Future responseOrError(Future f) => impl.responseOrError(f);
-
-  Future get errorFuture => impl.errorFuture;
-
-  int get version => impl.version;
-
-  Future<int> queryVersion() => impl.queryVersion();
-
-  void requireVersion(int requiredVersion) {
-    impl.requireVersion(requiredVersion);
+  void onSignIn(GoogleSignInResult result) {
+    if (!ctrl.isBound) {
+      ctrl.proxyError("The Proxy is closed.");
+      return;
+    }
+    var params = new _GoogleSignInListenerOnSignInParams();
+    params.result = result;
+    ctrl.sendMessage(params,
+        _googleSignInListenerMethodOnSignInName);
   }
-
-  String toString() {
-    return "GoogleSignInListenerProxy($impl)";
+  void onDisconnected(GoogleSignInResult result) {
+    if (!ctrl.isBound) {
+      ctrl.proxyError("The Proxy is closed.");
+      return;
+    }
+    var params = new _GoogleSignInListenerOnDisconnectedParams();
+    params.result = result;
+    ctrl.sendMessage(params,
+        _googleSignInListenerMethodOnDisconnectedName);
   }
 }
 
-
-class GoogleSignInListenerStub extends bindings.Stub {
+class _GoogleSignInListenerStubControl
+    extends bindings.StubMessageHandler
+    implements bindings.StubControl<GoogleSignInListener> {
   GoogleSignInListener _impl;
 
-  GoogleSignInListenerStub.fromEndpoint(
+  _GoogleSignInListenerStubControl.fromEndpoint(
       core.MojoMessagePipeEndpoint endpoint, [GoogleSignInListener impl])
       : super.fromEndpoint(endpoint, autoBegin: impl != null) {
     _impl = impl;
   }
 
-  GoogleSignInListenerStub.fromHandle(
+  _GoogleSignInListenerStubControl.fromHandle(
       core.MojoHandle handle, [GoogleSignInListener impl])
       : super.fromHandle(handle, autoBegin: impl != null) {
     _impl = impl;
   }
 
-  GoogleSignInListenerStub.unbound() : super.unbound();
+  _GoogleSignInListenerStubControl.unbound([this._impl]) : super.unbound();
 
-  static GoogleSignInListenerStub newFromEndpoint(
-      core.MojoMessagePipeEndpoint endpoint) {
-    assert(endpoint.setDescription("For GoogleSignInListenerStub"));
-    return new GoogleSignInListenerStub.fromEndpoint(endpoint);
-  }
+  String get serviceName => GoogleSignInListener.serviceName;
 
 
 
@@ -997,19 +1006,43 @@ class GoogleSignInListenerStub extends bindings.Stub {
     }
   }
 
+  @override
   String toString() {
     var superString = super.toString();
-    return "GoogleSignInListenerStub($superString)";
+    return "_GoogleSignInListenerStubControl($superString)";
   }
 
   int get version => 0;
+}
 
-  static service_describer.ServiceDescription _cachedServiceDescription;
-  static service_describer.ServiceDescription get serviceDescription {
-    if (_cachedServiceDescription == null) {
-      _cachedServiceDescription = new _GoogleSignInListenerServiceDescription();
-    }
-    return _cachedServiceDescription;
+class GoogleSignInListenerStub
+    extends bindings.Stub<GoogleSignInListener>
+    implements GoogleSignInListener,
+               GoogleSignInListenerInterface,
+               GoogleSignInListenerInterfaceRequest {
+  GoogleSignInListenerStub.unbound([GoogleSignInListener impl])
+      : super(new _GoogleSignInListenerStubControl.unbound(impl));
+
+  GoogleSignInListenerStub.fromEndpoint(
+      core.MojoMessagePipeEndpoint endpoint, [GoogleSignInListener impl])
+      : super(new _GoogleSignInListenerStubControl.fromEndpoint(endpoint, impl));
+
+  GoogleSignInListenerStub.fromHandle(
+      core.MojoHandle handle, [GoogleSignInListener impl])
+      : super(new _GoogleSignInListenerStubControl.fromHandle(handle, impl));
+
+  static GoogleSignInListenerStub newFromEndpoint(
+      core.MojoMessagePipeEndpoint endpoint) {
+    assert(endpoint.setDescription("For GoogleSignInListenerStub"));
+    return new GoogleSignInListenerStub.fromEndpoint(endpoint);
+  }
+
+
+  void onSignIn(GoogleSignInResult result) {
+    return impl.onSignIn(result);
+  }
+  void onDisconnected(GoogleSignInResult result) {
+    return impl.onDisconnected(result);
   }
 }
 
@@ -1033,7 +1066,27 @@ class _GoogleSignInServiceDescription implements service_describer.ServiceDescri
 
 abstract class GoogleSignIn {
   static const String serviceName = "google::GoogleSignIn";
-  void init(String clientId, Object listener);
+
+  static service_describer.ServiceDescription _cachedServiceDescription;
+  static service_describer.ServiceDescription get serviceDescription {
+    if (_cachedServiceDescription == null) {
+      _cachedServiceDescription = new _GoogleSignInServiceDescription();
+    }
+    return _cachedServiceDescription;
+  }
+
+  static GoogleSignInProxy connectToService(
+      bindings.ServiceConnector s, String url, [String serviceName]) {
+    GoogleSignInProxy p = new GoogleSignInProxy.unbound();
+    String name = serviceName ?? GoogleSignIn.serviceName;
+    if ((name == null) || name.isEmpty) {
+      throw new core.MojoApiError(
+          "If an interface has no ServiceName, then one must be provided.");
+    }
+    s.connectToService(url, p, name);
+    return p;
+  }
+  void init(String clientId, GoogleSignInListenerInterface listener);
   void signInSilently();
   void signIn();
   void signOut();
@@ -1041,24 +1094,36 @@ abstract class GoogleSignIn {
   void setScopes(List<String> scopes);
 }
 
+abstract class GoogleSignInInterface
+    implements bindings.MojoInterface<GoogleSignIn>,
+               GoogleSignIn {
+  factory GoogleSignInInterface([GoogleSignIn impl]) =>
+      new GoogleSignInStub.unbound(impl);
+  factory GoogleSignInInterface.fromEndpoint(
+      core.MojoMessagePipeEndpoint endpoint,
+      [GoogleSignIn impl]) =>
+      new GoogleSignInStub.fromEndpoint(endpoint, impl);
+}
 
-class _GoogleSignInProxyImpl extends bindings.Proxy {
-  _GoogleSignInProxyImpl.fromEndpoint(
+abstract class GoogleSignInInterfaceRequest
+    implements bindings.MojoInterface<GoogleSignIn>,
+               GoogleSignIn {
+  factory GoogleSignInInterfaceRequest() =>
+      new GoogleSignInProxy.unbound();
+}
+
+class _GoogleSignInProxyControl
+    extends bindings.ProxyMessageHandler
+    implements bindings.ProxyControl<GoogleSignIn> {
+  _GoogleSignInProxyControl.fromEndpoint(
       core.MojoMessagePipeEndpoint endpoint) : super.fromEndpoint(endpoint);
 
-  _GoogleSignInProxyImpl.fromHandle(core.MojoHandle handle) :
-      super.fromHandle(handle);
+  _GoogleSignInProxyControl.fromHandle(
+      core.MojoHandle handle) : super.fromHandle(handle);
 
-  _GoogleSignInProxyImpl.unbound() : super.unbound();
+  _GoogleSignInProxyControl.unbound() : super.unbound();
 
-  static _GoogleSignInProxyImpl newFromEndpoint(
-      core.MojoMessagePipeEndpoint endpoint) {
-    assert(endpoint.setDescription("For _GoogleSignInProxyImpl"));
-    return new _GoogleSignInProxyImpl.fromEndpoint(endpoint);
-  }
-
-  service_describer.ServiceDescription get serviceDescription =>
-    new _GoogleSignInServiceDescription();
+  String get serviceName => GoogleSignIn.serviceName;
 
   void handleResponse(bindings.ServiceMessage message) {
     switch (message.header.type) {
@@ -1069,101 +1134,32 @@ class _GoogleSignInProxyImpl extends bindings.Proxy {
     }
   }
 
+  GoogleSignIn get impl => null;
+  set impl(GoogleSignIn _) {
+    throw new core.MojoApiError("The impl of a Proxy cannot be set.");
+  }
+
+  @override
   String toString() {
     var superString = super.toString();
-    return "_GoogleSignInProxyImpl($superString)";
+    return "_GoogleSignInProxyControl($superString)";
   }
 }
 
-
-class _GoogleSignInProxyCalls implements GoogleSignIn {
-  _GoogleSignInProxyImpl _proxyImpl;
-
-  _GoogleSignInProxyCalls(this._proxyImpl);
-    void init(String clientId, Object listener) {
-      if (!_proxyImpl.isBound) {
-        _proxyImpl.proxyError("The Proxy is closed.");
-        return;
-      }
-      var params = new _GoogleSignInInitParams();
-      params.clientId = clientId;
-      params.listener = listener;
-      _proxyImpl.sendMessage(params, _googleSignInMethodInitName);
-    }
-    void signInSilently() {
-      if (!_proxyImpl.isBound) {
-        _proxyImpl.proxyError("The Proxy is closed.");
-        return;
-      }
-      var params = new _GoogleSignInSignInSilentlyParams();
-      _proxyImpl.sendMessage(params, _googleSignInMethodSignInSilentlyName);
-    }
-    void signIn() {
-      if (!_proxyImpl.isBound) {
-        _proxyImpl.proxyError("The Proxy is closed.");
-        return;
-      }
-      var params = new _GoogleSignInSignInParams();
-      _proxyImpl.sendMessage(params, _googleSignInMethodSignInName);
-    }
-    void signOut() {
-      if (!_proxyImpl.isBound) {
-        _proxyImpl.proxyError("The Proxy is closed.");
-        return;
-      }
-      var params = new _GoogleSignInSignOutParams();
-      _proxyImpl.sendMessage(params, _googleSignInMethodSignOutName);
-    }
-    void disconnect() {
-      if (!_proxyImpl.isBound) {
-        _proxyImpl.proxyError("The Proxy is closed.");
-        return;
-      }
-      var params = new _GoogleSignInDisconnectParams();
-      _proxyImpl.sendMessage(params, _googleSignInMethodDisconnectName);
-    }
-    void setScopes(List<String> scopes) {
-      if (!_proxyImpl.isBound) {
-        _proxyImpl.proxyError("The Proxy is closed.");
-        return;
-      }
-      var params = new _GoogleSignInSetScopesParams();
-      params.scopes = scopes;
-      _proxyImpl.sendMessage(params, _googleSignInMethodSetScopesName);
-    }
-}
-
-
-class GoogleSignInProxy implements bindings.ProxyBase {
-  final bindings.Proxy impl;
-  GoogleSignIn ptr;
-
-  GoogleSignInProxy(_GoogleSignInProxyImpl proxyImpl) :
-      impl = proxyImpl,
-      ptr = new _GoogleSignInProxyCalls(proxyImpl);
-
+class GoogleSignInProxy
+    extends bindings.Proxy<GoogleSignIn>
+    implements GoogleSignIn,
+               GoogleSignInInterface,
+               GoogleSignInInterfaceRequest {
   GoogleSignInProxy.fromEndpoint(
-      core.MojoMessagePipeEndpoint endpoint) :
-      impl = new _GoogleSignInProxyImpl.fromEndpoint(endpoint) {
-    ptr = new _GoogleSignInProxyCalls(impl);
-  }
+      core.MojoMessagePipeEndpoint endpoint)
+      : super(new _GoogleSignInProxyControl.fromEndpoint(endpoint));
 
-  GoogleSignInProxy.fromHandle(core.MojoHandle handle) :
-      impl = new _GoogleSignInProxyImpl.fromHandle(handle) {
-    ptr = new _GoogleSignInProxyCalls(impl);
-  }
+  GoogleSignInProxy.fromHandle(core.MojoHandle handle)
+      : super(new _GoogleSignInProxyControl.fromHandle(handle));
 
-  GoogleSignInProxy.unbound() :
-      impl = new _GoogleSignInProxyImpl.unbound() {
-    ptr = new _GoogleSignInProxyCalls(impl);
-  }
-
-  factory GoogleSignInProxy.connectToService(
-      bindings.ServiceConnector s, String url, [String serviceName]) {
-    GoogleSignInProxy p = new GoogleSignInProxy.unbound();
-    s.connectToService(url, p, serviceName);
-    return p;
-  }
+  GoogleSignInProxy.unbound()
+      : super(new _GoogleSignInProxyControl.unbound());
 
   static GoogleSignInProxy newFromEndpoint(
       core.MojoMessagePipeEndpoint endpoint) {
@@ -1171,50 +1167,86 @@ class GoogleSignInProxy implements bindings.ProxyBase {
     return new GoogleSignInProxy.fromEndpoint(endpoint);
   }
 
-  String get serviceName => GoogleSignIn.serviceName;
 
-  Future close({bool immediate: false}) => impl.close(immediate: immediate);
-
-  Future responseOrError(Future f) => impl.responseOrError(f);
-
-  Future get errorFuture => impl.errorFuture;
-
-  int get version => impl.version;
-
-  Future<int> queryVersion() => impl.queryVersion();
-
-  void requireVersion(int requiredVersion) {
-    impl.requireVersion(requiredVersion);
+  void init(String clientId, GoogleSignInListenerInterface listener) {
+    if (!ctrl.isBound) {
+      ctrl.proxyError("The Proxy is closed.");
+      return;
+    }
+    var params = new _GoogleSignInInitParams();
+    params.clientId = clientId;
+    params.listener = listener;
+    ctrl.sendMessage(params,
+        _googleSignInMethodInitName);
   }
-
-  String toString() {
-    return "GoogleSignInProxy($impl)";
+  void signInSilently() {
+    if (!ctrl.isBound) {
+      ctrl.proxyError("The Proxy is closed.");
+      return;
+    }
+    var params = new _GoogleSignInSignInSilentlyParams();
+    ctrl.sendMessage(params,
+        _googleSignInMethodSignInSilentlyName);
+  }
+  void signIn() {
+    if (!ctrl.isBound) {
+      ctrl.proxyError("The Proxy is closed.");
+      return;
+    }
+    var params = new _GoogleSignInSignInParams();
+    ctrl.sendMessage(params,
+        _googleSignInMethodSignInName);
+  }
+  void signOut() {
+    if (!ctrl.isBound) {
+      ctrl.proxyError("The Proxy is closed.");
+      return;
+    }
+    var params = new _GoogleSignInSignOutParams();
+    ctrl.sendMessage(params,
+        _googleSignInMethodSignOutName);
+  }
+  void disconnect() {
+    if (!ctrl.isBound) {
+      ctrl.proxyError("The Proxy is closed.");
+      return;
+    }
+    var params = new _GoogleSignInDisconnectParams();
+    ctrl.sendMessage(params,
+        _googleSignInMethodDisconnectName);
+  }
+  void setScopes(List<String> scopes) {
+    if (!ctrl.isBound) {
+      ctrl.proxyError("The Proxy is closed.");
+      return;
+    }
+    var params = new _GoogleSignInSetScopesParams();
+    params.scopes = scopes;
+    ctrl.sendMessage(params,
+        _googleSignInMethodSetScopesName);
   }
 }
 
-
-class GoogleSignInStub extends bindings.Stub {
+class _GoogleSignInStubControl
+    extends bindings.StubMessageHandler
+    implements bindings.StubControl<GoogleSignIn> {
   GoogleSignIn _impl;
 
-  GoogleSignInStub.fromEndpoint(
+  _GoogleSignInStubControl.fromEndpoint(
       core.MojoMessagePipeEndpoint endpoint, [GoogleSignIn impl])
       : super.fromEndpoint(endpoint, autoBegin: impl != null) {
     _impl = impl;
   }
 
-  GoogleSignInStub.fromHandle(
+  _GoogleSignInStubControl.fromHandle(
       core.MojoHandle handle, [GoogleSignIn impl])
       : super.fromHandle(handle, autoBegin: impl != null) {
     _impl = impl;
   }
 
-  GoogleSignInStub.unbound() : super.unbound();
+  _GoogleSignInStubControl.unbound([this._impl]) : super.unbound();
 
-  static GoogleSignInStub newFromEndpoint(
-      core.MojoMessagePipeEndpoint endpoint) {
-    assert(endpoint.setDescription("For GoogleSignInStub"));
-    return new GoogleSignInStub.fromEndpoint(endpoint);
-  }
+  String get serviceName => GoogleSignIn.serviceName;
 
 
 
@@ -1276,19 +1308,55 @@ class GoogleSignInStub extends bindings.Stub {
     }
   }
 
+  @override
   String toString() {
     var superString = super.toString();
-    return "GoogleSignInStub($superString)";
+    return "_GoogleSignInStubControl($superString)";
   }
 
   int get version => 0;
+}
 
-  static service_describer.ServiceDescription _cachedServiceDescription;
-  static service_describer.ServiceDescription get serviceDescription {
-    if (_cachedServiceDescription == null) {
-      _cachedServiceDescription = new _GoogleSignInServiceDescription();
-    }
-    return _cachedServiceDescription;
+class GoogleSignInStub
+    extends bindings.Stub<GoogleSignIn>
+    implements GoogleSignIn,
+               GoogleSignInInterface,
+               GoogleSignInInterfaceRequest {
+  GoogleSignInStub.unbound([GoogleSignIn impl])
+      : super(new _GoogleSignInStubControl.unbound(impl));
+
+  GoogleSignInStub.fromEndpoint(
+      core.MojoMessagePipeEndpoint endpoint, [GoogleSignIn impl])
+      : super(new _GoogleSignInStubControl.fromEndpoint(endpoint, impl));
+
+  GoogleSignInStub.fromHandle(
+      core.MojoHandle handle, [GoogleSignIn impl])
+      : super(new _GoogleSignInStubControl.fromHandle(handle, impl));
+
+  static GoogleSignInStub newFromEndpoint(
+      core.MojoMessagePipeEndpoint endpoint) {
+    assert(endpoint.setDescription("For GoogleSignInStub"));
+    return new GoogleSignInStub.fromEndpoint(endpoint);
+  }
+
+
+  void init(String clientId, GoogleSignInListenerInterface listener) {
+    return impl.init(clientId, listener);
+  }
+  void signInSilently() {
+    return impl.signInSilently();
+  }
+  void signIn() {
+    return impl.signIn();
+  }
+  void signOut() {
+    return impl.signOut();
+  }
+  void disconnect() {
+    return impl.disconnect();
+  }
+  void setScopes(List<String> scopes) {
+    return impl.setScopes(scopes);
   }
 }
 

@@ -39,8 +39,8 @@ class GoogleSignIn {
         "google::GoogleSignIn",
         mojom.GoogleSignIn.connectToService
      )  {
-    mojom.GoogleSignInListenerStub stub = new mojom.GoogleSignInListenerStub.unbound()
-      ..impl = new _Listener(_streamController);
+    mojom.GoogleSignInListenerStub stub =
+      new mojom.GoogleSignInListenerStub.unbound(new _Listener(_streamController));
     _proxy.init(clientID, stub);
     onCurrentUserChanged.listen((mojom.GoogleSignInUser user) => _currentUser = user);
   }
