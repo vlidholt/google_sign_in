@@ -1,5 +1,6 @@
 name: GoogleSignInExample
-description: A new flutter project.
 dependencies:
   flutter:
     path: ../../flutter/packages/flutter
+  google_sign_in:
+    path: ..
