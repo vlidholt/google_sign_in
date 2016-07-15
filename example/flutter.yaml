@@ -1,4 +1,2 @@
-name: google_sign_in_example
+name: GoogleSignInExample
 uses-material-design: true
-services:
-  - google_sign_in
