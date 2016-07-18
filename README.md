@@ -2,6 +2,8 @@ A Dart wrapper for [Google Sign In](https://developers.google.com/identity/).
 
 ### Building the example
 
+You will need to register a new application in the Google Developer console to run the example in this repository.
+
 #### Android
 
 Update android/local.properties to add flutter.sdk=/path/to/flutter/sdk
@@ -70,10 +72,10 @@ In your Dart code, you can now call APIs like GoogleSignIn.signIn(). Refer to th
 #### iOS
 
 Make sure you have CocoaPods installed and run ```pod init``` in your ios folder.
-Edit your Podfile to add ```pod 'Flutter/GoogleSignIn``` and run ```pod install```.
-You can now open ```example/ios/GoogleSignInExample.xcworkspace``` in Xcode.
+Edit your Podfile to add ```pod 'FlutterGoogleSignIn``` and run ```pod install```.
+You can now open ```example/ios/Runner.xcworkspace``` in Xcode.
 
-Go to the [iOS Sign-In SDK instructions](https://developers.google.com/identity/sign-in/ios/start) and follow the instructions to add a GoogleServices-Info.plist file to your project and to set up a URL type for REVERSED_CLIENT_ID to handle the callback.
+Go to the [iOS Sign-In SDK instructions](https://developers.google.com/identity/sign-in/ios/start) and follow the instructions to add a GoogleServices-Info.plist file to your Runner project and to set up a URL type for REVERSED_CLIENT_ID to handle the callback.
 
 Modify your AppDelegate.m to pass your view controller to the FLTGoogleSignIn shared instance and notify it when your application is opened with a URL:
 
@@ -101,6 +103,7 @@ Modify your AppDelegate.m to pass your view controller to the FLTGoogleSignIn sh
 ### Compiling from source
 
 If you want to make changes to the FlutterGoogleSignIn class, you'll need to build from source rather than using the published binaries.
+You'll need a local checkout of the google_sign_in repository, which can be in any location.
 
 #### Android
 
@@ -114,8 +117,10 @@ Copy bin/cache/artifacts/engine/android-arm/flutter.jar from your Flutter SDK in
 
 Run ```zip -d flutter.jar "assets/*" "lib/*"``` in the android/libs directory.
 
-You should now be able to build from source using Android Studio.
+You should now be able to build from source using Android Studio or ```flutter run```.
 
 #### iOS
 
-Change the reference Podfile to ```pod 'Flutter/GoogleSignIn', :path => '/path/to/google_sign_in'``` and run ```pod install```.
+Change the reference Podfile to ```pod 'FlutterGoogleSignIn', :path => '/path/to/google_sign_in'``` and run ```pod install```.
+
+You should now be able to build from source using Xcode or ```flutter run```.
