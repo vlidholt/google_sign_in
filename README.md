@@ -1,4 +1,8 @@
-A Dart wrapper for [Google Sign In](https://developers.google.com/identity/).
+A Flutter wrapper for [Google Sign In](https://developers.google.com/identity/).
+
+Note: This is a work-in-progress, and is not fully supported by the Flutter team.
+(For example, we don't have this under continuous integration and testing.)
+
 
 ### Building the example
 
@@ -124,3 +128,8 @@ You should now be able to build from source using Android Studio or ```flutter r
 Change the reference Podfile to ```pod 'FlutterGoogleSignIn', :path => '/path/to/google_sign_in'``` and run ```pod install```.
 
 You should now be able to build from source using Xcode or ```flutter run```.
+
+## Issues and feedback
+
+Please file [issues](https://github.com/flutter/flutter/issues/new)
+to send feedback or report a bug. Thank you!
