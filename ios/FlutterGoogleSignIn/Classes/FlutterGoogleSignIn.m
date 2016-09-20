@@ -64,6 +64,7 @@
         response = @{
             @"isSuccess": @(YES),
             @"signInAccount": @{
+                @"accessToken": user.authentication.accessToken ?: [NSNull null],
                 @"displayName": user.profile.name ?: [NSNull null],
                 @"email": user.profile.email ?: [NSNull null],
                 @"id": user.userID ?: [NSNull null],

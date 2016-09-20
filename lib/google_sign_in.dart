@@ -9,6 +9,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 
 class GoogleSignInAccount {
+  final String accessToken;
   final String displayName;
   final String email;
   final String id;
@@ -17,7 +18,8 @@ class GoogleSignInAccount {
   final String photoUrl;
 
   GoogleSignInAccount._(Map<String, dynamic> message)
-    : displayName = message['displayName'],
+    : accessToken = message['accessToken'],
+      displayName = message['displayName'],
       email = message['email'],
       id = message['id'],
       idToken = message['idToken'],
