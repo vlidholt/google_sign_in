@@ -1,6 +1,21 @@
 name: GoogleSignInExample
+author: Flutter Team <flutter-dev@googlegroups.com>
+description: Example using the Flutter Google sign in.
+homepage: https://github.com/flutter/google_sign_in
+
 dependencies:
+
   flutter:
-    path: ../../flutter/packages/flutter
+    sdk: flutter
+
   google_sign_in:
     path: ..
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_driver:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
