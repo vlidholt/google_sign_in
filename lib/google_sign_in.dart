@@ -41,7 +41,7 @@ class GoogleSignIn {
 
   static Future<GoogleSignInResult> _callMethod(String method) async {
     Map<String, String> request = <String, String>{'method': method};
-    Map<String, dynamic> response = await HostMessages.sendJSON('GoogleSignIn', request);
+    Map<String, dynamic> response = await PlatformMessages.sendJSON('GoogleSignIn', request);
     return new GoogleSignInResult._(response);
   }
 
